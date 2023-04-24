@@ -8,7 +8,10 @@ simulation that you will get at the end of the Jupyter notebook.
  
 ![](Fig_BPL_IEC_operation.png)
 
-You see in the diagram typical resuts during opoeration.
+You see in the diagram typical resuts during operation.
+* The upper diagrams shows the concenration of the two proteins P and A at the outlet of the chromatography column.
+* The next diagram show the salt concentration during operation.
+* The following four diagrams with green curves show the following flow rates: flow of sample, flow of adsorptioin buffer, flow of desorption buffer and finally the volume of the harvested materia
 
 You start up the notebook in Colab by pressing here
 [start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_IEC_operation/blob/main/BPL_IEC_operation_colab.ipynb)
@@ -19,7 +22,6 @@ You can continue in the notebook and make new simulations and follow the example
 
 Note that:
 * The script occassionaly get stuck during installation. Then just close the notebook and start from scratch.
-* Runtime warnings are at the moment silenced. The main reason is that we run with an older combination of PyFMI and Python that bring depracation warnings of little interest. 
 * Remember, you need to have a google-account!
 
 Just to be clear, no installation is done at your local computer.
