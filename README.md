@@ -15,7 +15,7 @@ You see in the diagram typical resuts during operation.
 
 You start up the notebook in Colab by pressing here
 [start BPL notebook](https://colab.research.google.com/github/janpeter19/BPL_IEC_operation/blob/main/BPL_IEC_operation_colab.ipynb)
-Then you in the menu choose Runtime/Run all. The subsequent execution of the simulations of IEC operation take just a second or so. 
+Then you in the menu choose Runtime/Run all. The installation of software on the remote Google server takes a few minutes. The subsequent execution of the simulations of IEC operation take just a seconds or so. 
 
 You can continue in the notebook and make new simulations and follow the examples given. Here are many things to explore!
 
