@@ -19,6 +19,8 @@ Then you in the menu choose Runtime/Run all. The installation of software on the
 
 You can continue in the notebook and make new simulations and follow the examples given. Here are many things to explore!
 
+See also the related repository: BPL_IEC_validation.
+
 Note that:
 * The script occassionaly get stuck during installation. Then just close the notebook and start from scratch.
 * Remember, you need to have a google-account!
