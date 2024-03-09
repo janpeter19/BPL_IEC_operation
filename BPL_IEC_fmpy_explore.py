@@ -54,6 +54,7 @@
 # 2023-05-31 - Adjusted to from importlib.meetadata import version
 # 2023-06-02 - Add logging of a few variables
 # 2023-09-14 - Update FMU-explore 0.9.8 (try to keep the same ver number as for PyFMI) with process diagram
+# 2023-03-08 - Stepwise adapatation to FMU-explore 0.9.9
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -140,14 +141,14 @@ else:
 global simulationTime; simulationTime = 100.0
 global prevFinalTime; prevFinalTime = 0
 
-# Provide process diagram on disk
-fmu_process_diagram ='IBPL_IEC_process_diagram_omnigraffle.png'
-
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
 
 # Define a minimal compoent list of the model as a starting point for describe('parts')
 component_list_minimum = []
+
+# Provide process diagram on disk
+fmu_process_diagram ='IBPL_IEC_process_diagram_omnigraffle.png'
 
 #------------------------------------------------------------------------------------------------------------------
 #  Specific application constructs: stateDict, parDict, diagrams, newplot(), describe()
@@ -163,17 +164,17 @@ global stateDictInitial; stateDictInitial = {}
 for key in stateDict.keys():
     if not key[-1] == ']':
          if key[-3:] == 'I.y':
-            stateDictInitial[key] = key[:-10]+'I_0'
+            stateDictInitial[key] = key[:-10]+'I_start'
          elif key[-3:] == 'D.x':
-            stateDictInitial[key] = key[:-10]+'D_0'
+            stateDictInitial[key] = key[:-10]+'D_start'
          else:
-            stateDictInitial[key] = key+'_0'
+            stateDictInitial[key] = key+'_start'
     elif key[-3] == '[':
-        stateDictInitial[key] = key[:-3]+'_0'+key[-3:]
+        stateDictInitial[key] = key[:-3]+'_start'+key[-3:]
     elif key[-4] == '[':
-        stateDictInitial[key] = key[:-4]+'_0'+key[-4:]
+        stateDictInitial[key] = key[:-4]+'_start'+key[-4:]
     elif key[-5] == '[':
-        stateDictInitial[key] = key[:-5]+'_0'+key[-5:] 
+        stateDictInitial[key] = key[:-5]+'_start'+key[-5:] 
     else:
         print('The state vector has more than 1000 states')
         break
@@ -194,7 +195,7 @@ parDict['k3'] = 0.05
 parDict['k4'] = 0.3
 parDict['Q_av'] = 3.0
 
-parDict['E_0'] = 0.0
+parDict['E_start'] = 0.0
 
 parDict['P_in'] = 0.3
 parDict['A_in'] = 0.3
@@ -228,7 +229,7 @@ parLocation['k3'] = 'column.k3'
 parLocation['k4'] = 'column.k4'
 parLocation['Q_av'] = 'column.Q_av'
 
-parLocation['E_0'] = 'column.column_section[1].c_0[3]'
+parLocation['E_start'] = 'column.column_section[1].c_start[3]'
 
 parLocation['P_in'] = 'tank_sample.c_in[1]'
 parLocation['A_in'] = 'tank_sample.c_in[2]'
@@ -1065,7 +1066,7 @@ def describe(name, decimals=3):
          
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 0.9.8'
+FMU_explore = 'FMU-explore for FMPy version 0.9.9'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -1087,12 +1088,12 @@ def par(parDict=parDict, parCheck=parCheck, parLocation=parLocation, *x, **x_kwa
 
 # Define function init() for initial values update
 def init(parDict=parDict, *x, **x_kwarg):
-   """ Set initial values and the name should contain string '_0' to be accepted.
+   """ Set initial values and the name should contain string '_start' to be accepted.
        The function can handle general parameter string location names if entered as a dictionary. """
    x_kwarg.update(*x)
    x_init={}
    for key in x_kwarg.keys():
-      if '_0' in key: 
+      if '_start' in key: 
          x_init.update({key: x_kwarg[key]})
       else:
          print('Error:', key, '- seems not an initial value, use par() instead - check the spelling')
