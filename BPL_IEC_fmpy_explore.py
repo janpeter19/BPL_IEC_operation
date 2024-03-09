@@ -54,7 +54,7 @@
 # 2023-05-31 - Adjusted to from importlib.meetadata import version
 # 2023-06-02 - Add logging of a few variables
 # 2023-09-14 - Update FMU-explore 0.9.8 (try to keep the same ver number as for PyFMI) with process diagram
-# 2023-03-08 - Stepwise adapatation to FMU-explore 0.9.9
+# 2024-03-09 - Update FMU-explore 0.9.9
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -133,13 +133,14 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.1.1' 
+   BPL_version = 'Bioprocess Library version 2.1.2 prel' 
 else:    
    print('There is no FMU for this platform')
 
 # Simulation time
 global simulationTime; simulationTime = 100.0
 global prevFinalTime; prevFinalTime = 0
+
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
