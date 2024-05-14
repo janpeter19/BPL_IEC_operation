@@ -55,6 +55,7 @@
 # 2023-06-02 - Add logging of a few variables
 # 2023-09-14 - Update FMU-explore 0.9.8 (try to keep the same ver number as for PyFMI) with process diagram
 # 2024-03-09 - Update FMU-explore 0.9.9
+# 2024-05-14 - Polish the script
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -92,10 +93,7 @@ if platform.system() == 'Windows':
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'JM'
    flag_type = 'CS'
-elif platform.system() == 'Linux':
-#   flag_vendor = input('Linux - run FMU from JModelica (JM) or OpenModelica (OM)?')  
-#   flag_type = input('Linux - run FMU-CS (CS) or ME (ME)?')  
-#   print()   
+elif platform.system() == 'Linux': 
    flag_vendor = 'OM'
    flag_type = 'ME'
    if flag_vendor in ['','JM','jm']:    
@@ -133,7 +131,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.1.2 prel' 
+   BPL_version = 'Bioprocess Library version 2.2.0' 
 else:    
    print('There is no FMU for this platform')
 
@@ -1067,7 +1065,7 @@ def describe(name, decimals=3):
          
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 0.9.9'
+FMU_explore = 'FMU-explore for FMPy version 1.0.0'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
