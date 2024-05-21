@@ -56,6 +56,7 @@
 # 2023-09-14 - Update FMU-explore 0.9.8 (try to keep the same ver number as for PyFMI) with process diagram
 # 2024-03-09 - Update FMU-explore 0.9.9
 # 2024-05-14 - Polish the script
+# 2024-05-20 - Updated the OpenModelica version to 1.23.0-dev
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -101,7 +102,7 @@ elif platform.system() == 'Linux':
       fmu_model ='BPL_IEC_Column_system_linux_jm_cs.fmu'      
       model_description = read_model_description(fmu_model) 
    if flag_vendor in ['OM','om']:
-      print('Linux - run FMU pre-comiled OpenModelica 1.21.0') 
+      print('Linux - run FMU pre-comiled OpenModelica 1.23.0-dev') 
       if flag_type in ['CS','cs']:         
          fmu_model ='BPL_IEC_Column_system_linux_om_cs.fmu'    
          model_description = read_model_description(fmu_model) 
