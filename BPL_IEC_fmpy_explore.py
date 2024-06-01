@@ -57,6 +57,7 @@
 # 2024-03-09 - Update FMU-explore 0.9.9
 # 2024-05-14 - Polish the script
 # 2024-05-20 - Updated the OpenModelica version to 1.23.0-dev
+# 2024-06-01 - Corrected model_get() to handle string values as well - improvement very small and keep ver 1.0.0
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -1108,19 +1109,23 @@ def model_get(parLoc, model_description=model_description):
          try:
             if par_var[k].name in start_values.keys():
                   value = start_values[par_var[k].name]
-            elif par_var[k].variability in ['constant']:        
-                  value = float(par_var[k].start)                          
-            elif par_var[k].variability in ['fixed', 'continuous']:
+            elif par_var[k].variability in ['constant', 'fixed']: 
+               if par_var[k].type in ['Integer', 'Real']: 
+                  value = float(par_var[k].start)      
+               if par_var[k].type in ['String']: 
+                  value = par_var[k].start                        
+            elif par_var[k].variability == 'continuous':
                try:
-                  value = sim_res[par_var[k].name][-1]
+                  timeSeries = sim_res[par_var[k].name]
+                  value = timeSeries[-1]
                except (AttributeError, ValueError):
                   value = None
                   print('Variable not logged')
             else:
                value = None
          except NameError:
-            print('Error: Information available after first simulation')
-            value = None
+            print('Error: Information available after first simution')
+            value = None          
    return value
 
 def model_get_variable_description(parLoc, model_description=model_description):
