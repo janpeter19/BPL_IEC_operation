@@ -58,6 +58,7 @@
 # 2024-05-14 - Polish the script
 # 2024-05-20 - Updated the OpenModelica version to 1.23.0-dev
 # 2024-06-01 - Corrected model_get() to handle string values as well - improvement very small and keep ver 1.0.0
+# 2024-10-04 - Update information about FMU
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -103,7 +104,7 @@ elif platform.system() == 'Linux':
       fmu_model ='BPL_IEC_Column_system_linux_jm_cs.fmu'      
       model_description = read_model_description(fmu_model) 
    if flag_vendor in ['OM','om']:
-      print('Linux - run FMU pre-comiled OpenModelica 1.23.0-dev') 
+      print('Linux - run FMU pre-compiled OpenModelica') 
       if flag_type in ['CS','cs']:         
          fmu_model ='BPL_IEC_Column_system_linux_om_cs.fmu'    
          model_description = read_model_description(fmu_model) 
@@ -133,7 +134,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.2.0' 
+   BPL_version = 'Bioprocess Library version 2.2.1 - GUI' 
 else:    
    print('There is no FMU for this platform')
 
@@ -1067,7 +1068,7 @@ def describe(name, decimals=3):
          
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 1.0.0'
+FMU_explore = 'FMU-explore for FMPy version 1.0.1'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -1107,27 +1108,28 @@ def model_get(parLoc, model_description=model_description):
    for k in range(len(par_var)):
       if par_var[k].name == parLoc:
          try:
-            if par_var[k].name in start_values.keys():
-                  value = start_values[par_var[k].name]
-            elif par_var[k].variability in ['constant', 'fixed']: 
-               if par_var[k].type in ['Integer', 'Real']: 
-                  value = float(par_var[k].start)      
-               if par_var[k].type in ['String']: 
-                  value = par_var[k].start                        
+            if (par_var[k].causality in ['local']) & (par_var[k].variability in ['constant']):
+               value = float(par_var[k].start)                 
+            elif par_var[k].causality in ['parameter']: 
+               value = float(par_var[k].start)  
+            elif par_var[k].causality in ['calculatedParameter']: 
+               value = float(sim_res[par_var[k].name][0]) 
+            elif par_var[k].name in start_values.keys():
+               value = start_values[par_var[k].name]   
             elif par_var[k].variability == 'continuous':
                try:
                   timeSeries = sim_res[par_var[k].name]
-                  value = timeSeries[-1]
+                  value = float(timeSeries[-1])
                except (AttributeError, ValueError):
                   value = None
                   print('Variable not logged')
             else:
                value = None
          except NameError:
-            print('Error: Information available after first simution')
+            print('Error: Information available after first simulation')
             value = None          
    return value
-
+   
 def model_get_variable_description(parLoc, model_description=model_description):
    """ Function corresponds to pyfmi model.get_variable_description() but returns just a value and not a list"""
    par_var = model_description.modelVariables
@@ -1229,7 +1231,7 @@ def simu(simulationTime=simulationTime, mode='Initial', options=opts_std, diagra
          validate = False,
          start_time = 0,
          stop_time = simulationTime,
-         output_interval = simulationTime/options['NCP'],
+         output_interval = simulationTime/options['ncp'],
          record_events = True,
          start_values = start_values,
          fmi_call_logger = None,
@@ -1265,7 +1267,7 @@ def simu(simulationTime=simulationTime, mode='Initial', options=opts_std, diagra
             validate = False,
             start_time = prevFinalTime,
             stop_time = prevFinalTime + simulationTime,
-            output_interval = simulationTime/options['NCP'],
+            output_interval = simulationTime/options['ncp'],
             record_events = True,
             start_values = start_values,
             fmi_call_logger = None,
@@ -1369,12 +1371,12 @@ def describe_general(name, decimals):
 # Plot process diagram
 def process_diagram(fmu_model=fmu_model, fmu_process_diagram=fmu_process_diagram):   
    try:
-       processDiagram = zipfile.ZipFile(fmu_model, 'r').open('documentation/processDiagram.png')
+       process_diagram = zipfile.ZipFile(fmu_model, 'r').open('documentation/processDiagram.png')
    except KeyError:
        print('No processDiagram.png file in the FMU, but try the file on disk.')
-       processDiagram = fmu_process_diagram
+       process_diagram = fmu_process_diagram
    try:
-       plt.imshow(img.imread(processDiagram))
+       plt.imshow(img.imread(process_diagram))
        plt.axis('off')
        plt.show()
    except FileNotFoundError:

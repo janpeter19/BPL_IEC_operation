@@ -55,6 +55,7 @@
 # 2024-03-09 - Update FMU-explore 0.9.9
 # 2024-05-13 - Polish the script
 # 2024-05-20 - Updated the OpenModelica version to 1.23.0-dev
+# 2024-10-04 - Update information about FMU
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -98,7 +99,7 @@ elif platform.system() == 'Linux':
       fmu_model ='BPL_IEC_Column_system_linux_jm_cs.fmu'      
       model = load_fmu(fmu_model, log_level=0)
    if flag_vendor in ['OM','om']:
-      print('Linux - run FMU pre-comiled OpenModelica 1.23.0-dev') 
+      print('Linux - run FMU pre-compiled OpenModelica') 
       if flag_type in ['CS','cs']:         
          fmu_model ='BPL_IEC_Column_system_linux_om_cs.fmu'    
          model = load_fmu(fmu_model, log_level=0)
@@ -130,7 +131,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '3.2.3'
-   BPL_version = 'Bioprocess Library version 2.2.0' 
+   BPL_version = 'Bioprocess Library version 2.2.1 - GUI' 
 else:    
    print('There is no FMU for this platform')
 
