@@ -61,6 +61,7 @@
 # 2024-10-04 - Update information about FMU and change NCP to ncp
 # 2024-10-07 - Brought back code from elif plotType == "Colum-outlet" and below, including FMU-explore  ver 1.0.1
 # 2024-11-07 - Update BPL 2.3.0
+# 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -134,8 +135,8 @@ if flag_vendor in ['JM', 'jm']:
    BPL_version = [x[1] for x in [(constants[k].name, constants[k].start) \
                        for k in range(len(constants))] if 'BPL.version' in x[0]][0] 
 elif flag_vendor in ['OM', 'om']:
-   MSL_usage = '3.2.3 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
-   MSL_version = '3.2.3'
+   MSL_usage = '4.1.0 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
+   MSL_version = '4.1.0'
    BPL_version = 'Bioprocess Library version 2.3.0' 
 else:    
    print('There is no FMU for this platform')
