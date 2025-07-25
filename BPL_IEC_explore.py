@@ -58,6 +58,7 @@
 # 2024-10-04 - Updated information about FMU
 # 2024-11-07 - Update BPL 2.3.0
 # 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
+# 2025-07-25 - Update BPL 2.3.1
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 global fmu_model, model, opts
 if platform.system() == 'Windows':
    print('Windows - run FMU pre-compiled JModelica 2.14')
-   fmu_model ='BPL_IEC_Column_system_windows_jm_cs.fmu'       
+   fmu_model ='BPL_IEC_Column_system_operation_windows_jm_cs.fmu'       
    model = load_fmu(fmu_model, log_level=0)
    flag_vendor = 'JM'
    flag_type = 'CS'
@@ -103,10 +104,10 @@ elif platform.system() == 'Linux':
    if flag_vendor in ['OM','om']:
       print('Linux - run FMU pre-compiled OpenModelica') 
       if flag_type in ['CS','cs']:         
-         fmu_model ='BPL_IEC_Column_system_linux_om_cs.fmu'    
+         fmu_model ='BPL_IEC_Column_system_operation_linux_om_cs.fmu'    
          model = load_fmu(fmu_model, log_level=0)
       if flag_type in ['ME','me']:         
-         fmu_model ='BPL_IEC_Column_system_linux_om_me.fmu' 
+         fmu_model ='BPL_IEC_Column_system_operation_linux_om_me.fmu' 
          model = load_fmu(fmu_model, log_level=0)
    else:    
       print('There is no FMU for this platform')
@@ -133,7 +134,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '4.1.0 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '4.1.0'
-   BPL_version = 'Bioprocess Library version 2.3.0' 
+   BPL_version = 'Bioprocess Library version 2.3.1' 
 else:    
    print('There is no FMU for this platform')
 

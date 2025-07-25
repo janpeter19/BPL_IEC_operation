@@ -62,6 +62,7 @@
 # 2024-10-07 - Brought back code from elif plotType == "Colum-outlet" and below, including FMU-explore  ver 1.0.1
 # 2024-11-07 - Update BPL 2.3.0
 # 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
+# 2025-07-25 - Update BPL 2.3.1
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -95,7 +96,7 @@ if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 global fmu_model
 if platform.system() == 'Windows':
    print('Windows - run FMU pre-compiled JModelica 2.14')
-   fmu_model ='BPL_IEC_Column_system_windows_jm_cs.fmu'       
+   fmu_model ='BPL_IEC_Column_system_operation_windows_jm_cs.fmu'       
    model_description = read_model_description(fmu_model)  
    flag_vendor = 'JM'
    flag_type = 'CS'
@@ -104,15 +105,15 @@ elif platform.system() == 'Linux':
    flag_type = 'ME'
    if flag_vendor in ['','JM','jm']:    
       print('Linux - run FMU pre-compiled JModelica 2.4')
-      fmu_model ='BPL_IEC_Column_system_linux_jm_cs.fmu'      
+      fmu_model ='BPL_IEC_Column_system_operation_linux_jm_cs.fmu'      
       model_description = read_model_description(fmu_model) 
    if flag_vendor in ['OM','om']:
       print('Linux - run FMU pre-compiled OpenModelica') 
       if flag_type in ['CS','cs']:         
-         fmu_model ='BPL_IEC_Column_system_linux_om_cs.fmu'    
+         fmu_model ='BPL_IEC_Column_system_operation_linux_om_cs.fmu'    
          model_description = read_model_description(fmu_model) 
       if flag_type in ['ME','me']:         
-         fmu_model ='BPL_IEC_Column_system_linux_om_me.fmu' 
+         fmu_model ='BPL_IEC_Column_system_linux_operation_om_me.fmu' 
          model_description = read_model_description(fmu_model) 
    else:    
       print('There is no FMU for this platform')
@@ -137,7 +138,7 @@ if flag_vendor in ['JM', 'jm']:
 elif flag_vendor in ['OM', 'om']:
    MSL_usage = '4.1.0 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
    MSL_version = '4.1.0'
-   BPL_version = 'Bioprocess Library version 2.3.0' 
+   BPL_version = 'Bioprocess Library version 2.3.1' 
 else:    
    print('There is no FMU for this platform')
 
