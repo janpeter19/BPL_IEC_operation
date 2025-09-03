@@ -63,6 +63,7 @@
 # 2024-11-07 - Update BPL 2.3.0
 # 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
 # 2025-07-25 - Update BPL 2.3.1
+# 2025-09-03 - Updated opts_std['ncp'] = 1000 mainly for ME (and CS) and now works with FMPy=0.3.26
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -120,9 +121,9 @@ elif platform.system() == 'Linux':
 
 # Provide various opts-profiles
 if flag_type in ['CS', 'cs']:
-   opts_std = {'ncp': 500}
+   opts_std = {'ncp': 1000}
 elif flag_type in ['ME', 'me']:
-   opts_std = {'ncp': 500}
+   opts_std = {'ncp': 1000}
 else:    
    print('There is no FMU for this platform')
 
