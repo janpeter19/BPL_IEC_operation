@@ -60,6 +60,7 @@
 # 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
 # 2025-07-25 - Update BPL 2.3.1
 # 2025-11-10 - Update FMU-explore 1.0.2
+# 2025-11-13 - Removed global declaration outside the funtions
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -88,7 +89,6 @@ if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 #------------------------------------------------------------------------------------------------------------------
 
 # Provde the right FMU and load for different platforms in user dialogue:
-global model
 if platform.system() == 'Windows':
    print('Windows - run FMU pre-compiled JModelica 2.14')
    fmu_model ='BPL_IEC_Column_system_operation_windows_jm_cs.fmu'       
@@ -140,8 +140,8 @@ else:
    print('There is no FMU for this platform')
 
 # Simulation time
-global simulationTime; simulationTime = 100.0
-global prevFinalTime; prevFinalTime = 0
+simulationTime = 100.0
+prevFinalTime = 0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
@@ -245,7 +245,6 @@ parCheck.append("parValue['stationary_desorption'] <= parValue['stop_desorption'
 parCheck.append("parValue['start_uv'] > parValue['stop_uv']")
 
 # Create list of diagrams to be plotted by simu()
-global diagrams
 diagrams = []
 
 # Define standard plots
