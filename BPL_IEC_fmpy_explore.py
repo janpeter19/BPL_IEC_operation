@@ -65,6 +65,7 @@
 # 2025-07-25 - Update BPL 2.3.1
 # 2025-11-13 - Update FMU-explore 1.0.1h - parDict > parValue, stateDict >stateValue, key_variables > keyVariables
 # 2025-11-13 - Removed global declaration outside the funtions
+# 2025-11-14 - FMU-explore 1.0.2 corrected
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -281,7 +282,6 @@ parCheck.append("parValue['start_adsorption'] < parValue['stop_adsorption']")
 parCheck.append("parValue['start_desorption'] < parValue['stationary_desorption']")
 parCheck.append("parValue['stationary_desorption'] < parValue['stop_desorption']")
 parCheck.append("parValue['start_uv'] > parValue['stop_uv']")
-
 
 # Create list of diagrams to be plotted by simu()
 diagrams = []
@@ -1070,7 +1070,7 @@ def describe(name, decimals=3):
          
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 1.0.1h'
+FMU_explore = 'FMU-explore for FMPy version 1.0.2'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
