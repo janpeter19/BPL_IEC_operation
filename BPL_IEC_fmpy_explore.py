@@ -67,6 +67,7 @@
 # 2025-11-13 - Removed global declaration outside the funtions
 # 2025-11-14 - FMU-explore 1.0.2 corrected
 # 2025-11-19 - FMU-explore 1.0.2 corrected again parLocation() with sheets as argument
+# 2026-03-28 - FMU-explore 1.0.3
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -1071,7 +1072,7 @@ def describe(name, decimals=3):
          
 #------------------------------------------------------------------------------------------------------------------
 #  General code 
-FMU_explore = 'FMU-explore for FMPy version 1.0.2'
+FMU_explore = 'FMU-explore for FMPy version 1.0.3'
 #------------------------------------------------------------------------------------------------------------------
 
 # Define function par() for parameter update
@@ -1157,14 +1158,12 @@ def model_get(parLoc, model_description=model_description):
 def model_get_variable_description(parLoc, model_description=model_description):
    """ Function corresponds to pyfmi model.get_variable_description() but returns just a value and not a list"""
    par_var = model_description.modelVariables
-#   value = [x[1] for x in [(par_var[k].name, par_var[k].description) for k in range(len(par_var))] if parLoc in x[0]]
    value = [x.description for x in par_var if parLoc in x.name]   
    return value[0]
    
 def model_get_variable_unit(parLoc, model_description=model_description):
    """ Function corresponds to pyfmi model.get_variable_unit() but returns just a value and not a list"""
    par_var = model_description.modelVariables
-#   value = [x[1] for x in [(par_var[k].name, par_var[k].unit) for k in range(len(par_var))] if parLoc in x[0]]
    value = [x.unit for x in par_var if parLoc in x.name]
    return value[0]
       
@@ -1364,6 +1363,9 @@ def describe_general(name, decimals, parLocation=parLocation):
       description = 'Time'
       unit = 'h'
       print(description,'[',unit,']')
+
+   elif name == 'process':
+      print(read_model_description(fmu_model).description)   
       
    elif name in parLocation.keys():
       description = model_get_variable_description(parLocation[name])
@@ -1453,6 +1455,13 @@ def system_info():
    print(' -MSL:', MSL_version)    
    print(' -Description:', BPL_version)   
    print(' -Interaction:', FMU_explore)
+   
+def SDG(explanation=False):
+  if explanation:
+    print('"Soli Deo Gloria"')
+    print(' It is latin and means "To the honour of God".') 
+    print(' The great composer Johan Sebastian Bach used to end his compositions with this small remark SDG.')
+    print(' And I like to do that too :).')    
    
 #------------------------------------------------------------------------------------------------------------------
 #  Startup
