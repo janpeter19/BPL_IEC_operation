@@ -1,400 +1,150 @@
-# Figure - Simulation of IEC
-#          with functions added to facilitate explorative simulation work
-#
+# setup application functions BPL_IEC_operation dependent on previous import of functions from fmu_explore 
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
-# 2021-09-24 - Created
-# 2021-09-27 - Include also elution phase
-# 2021-09-29 - Structured column system slightly differently and updated for that
-# 2021-10-01 - Updated system_info() with FMU-explore version
-# 2021-10-01 - Updated diagrams and used uv_detector signal 
-# 2021-11-12 - After talking with Karl Johan Brink I changed volume to area*height and scale by area
-# 2021-11-13 - After talking with Karl Johan I also introduce linear flow rate u i.e. u = F/area
-# 2021-11-13 - Also changed time unit from s to min all over and according to Karl Johan
-# 2021-11-25 - Introduced diagram Elution-vs-volume and Elution-vs-volume-combined
-# 2021-11-27 - Modifed for F, u, V 
-# 2021-12-02 - Update for use of FluidMixerV in BPL ver 2.0.9 - beta 
-# 2021-12-03 - Added simple plot of column outlet vs time to bridge to OpenModelica demo
-# 2021-12-03 - Extended FMU-explore 0.8.6 for function disp() and dictionary parLocation[]
-# 2021-12-13 - Extended newplot() with diagrams inclukding concductivity instead of ion concentration
-# 2021-12-13 - Change unit from min to hours and also affect process parameters
-# 2021-12-14 - Changed start and point for diagrams related to elution to be set automatically based on parDict
-# 2021-12-17 - Now adjusted diagrams Elution-pooling
-# 2021-12-18 - Changed back to use unit mL for all volumes and what Karl Johan wanted
-# 2021-12-18 - Correction of disp() - now FMU-explore ver 0.8.7
-# 2021-12-22 - Change of how flows are controlled and their parameters
-# 2022-04-25 - Update to FMU-explore 0.9.0.
-# 2022-04-25 - Take away variable scaling and read it off from mode() when needed
-# 2022-04-25 - Introduce a switch called scale_volume that is true for using volume for switch events alt time
-# 2022-04-27 - Modified disp() and describe() to handle that scale_volume is boolean
-# 2022-04-28 - Tidy up newplot()
-# 2022-04-29 - Corrected newplot()  'Elution-pooling' and 'Pooling', also improved error text par() and init() 
-# 2022-05-01 - Corrected newplot() 'Time' to 'time' and import when Jupyter widget framework is used
-# 2022-05-07 - Changed time scale from hours to min
-# 2022-05-21 - Added to newplot 'Elution-conductivity-combined-all'
-# 2022-10-07 - Updated for FMU-explore 0.9.5 with disp() that do not include extra parameters with parLocation
-# 2022-11-11 - Updating handling of V, V_m and LFR
-# 2022-11-12 - Updating newplot() with plotType 'Elution-vs-CV
-# 2022-11-14 - Introduced possibilty to give intial value of ion E in section 1 a value to illustrate need to wash
-# 2022-12-01 - Added parameters for control_pooling based on UV-levels in combination with a time_window
-# 2022-12-03 - Introduced diagram plotType='Elutions-vs-CV-pooling'
-# 2022-12-09 - Adjusted to skip pooling2 for a while
-# 2022-12-12 - FNU-explore 0.9.6b test with extension to par() using dictionary parCheck
-# 2022-12-12 - Changed uv_high and uv_low to start_uv and stop_uv and also changed parLocation after FMU update
-# 2022-12-16 - Updated describe() test for 'chromatogoraph' as well as for 'liquidphase' for clarity
-# 2023-01-28 - Include E_in_sample an idea from Karl Johan Brink
-# 2023-02-03 - Include a switch gradient that if true produce a salt gradient and if false stepwise increase
-# 2023-02-06 - Change to ControlDesrptionBuffer and corresponding changes in parDict and parLocation etc
-# 2023-02-06 - Included relevant list of parCheck
-# 2023-02-06 - Updated to FMU-explore 0.9.6e including parCheck...
-# 2023-02-06 - Play with the idea of parCalc - but dropped
-# 2023-04-05 - Update FMU-explore 0.9.7
-# 2023-04-24 - Correcteion of plotType 'Elution' concerning handling of time
-# 2023-05-31 - Adjusted to from importlib.meetadata import version
-# 2023-09-14 - Update FMU-explore 0.9.8 with process diagram
-# 2024-03-09 - Update FMU-explore 0.9.9
-# 2024-05-13 - Polish the script
-# 2024-05-20 - Updated the OpenModelica version to 1.23.0-dev
-# 2024-10-04 - Updated information about FMU
-# 2024-11-07 - Update BPL 2.3.0
-# 2025-06-13 - Test MSL 4.1.0 with OpenModelica genreated FMU
-# 2025-07-25 - Update BPL 2.3.1
-# 2025-11-10 - Update FMU-explore 1.0.2
-# 2025-11-13 - Removed global declarations outside the funtions
-# 2025-11-14 - FMU-explore 1.0.2 corrected
-# 2025-11-19 - FMU-explore 1.0.2 corrected again parLocation() with sheets as argument
-# 2026-03-28 - FMU-explore 1.0.3
-# 2026-04-14 - BPL 2.3.2
+# 2026-08-28 - Created
 #------------------------------------------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------------------------------------------
-#  Framework
-#------------------------------------------------------------------------------------------------------------------
-
-import sys
-import platform
-import locale
-import numpy as np 
-import matplotlib.pyplot as plt
-import matplotlib.image as img
-import zipfile  
-
-from pyfmi import load_fmu
-from pyfmi.fmi import FMUException
-
-from itertools import cycle
-from importlib.metadata import version   
-
-# Set the environment - for Linux a JSON-file in the FMU is read
-if platform.system() == 'Linux': locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
-#------------------------------------------------------------------------------------------------------------------
-#  Setup application FMU
-#------------------------------------------------------------------------------------------------------------------
-
-# Provde the right FMU and load for different platforms in user dialogue:
-if platform.system() == 'Windows':
-   print('Windows - run FMU pre-compiled JModelica 2.14')
-   fmu_model ='BPL_IEC_Column_system_operation_windows_jm_cs.fmu'       
-   model = load_fmu(fmu_model, log_level=0)
-   flag_vendor = 'JM'
-   flag_type = 'CS'
-elif platform.system() == 'Linux':  
-   flag_vendor = 'OM'
-   flag_type = 'ME'
-   if flag_vendor in ['','JM','jm']:    
-      print('Linux - run FMU pre-compiled JModelica 2.4')
-      fmu_model ='BPL_IEC_Column_system_linux_jm_cs.fmu'      
-      model = load_fmu(fmu_model, log_level=0)
-   if flag_vendor in ['OM','om']:
-      print('Linux - run FMU pre-compiled OpenModelica') 
-      if flag_type in ['CS','cs']:         
-         fmu_model ='BPL_IEC_Column_system_operation_linux_om_cs.fmu'    
-         model = load_fmu(fmu_model, log_level=0)
-      if flag_type in ['ME','me']:         
-         fmu_model ='BPL_IEC_Column_system_operation_linux_om_me.fmu' 
-         model = load_fmu(fmu_model, log_level=0)
-   else:    
-      print('There is no FMU for this platform')
-
-# Provide various opts-profiles
-if flag_type in ['CS', 'cs']:
-   opts_std = model.simulate_options()
-   opts_std['silent_mode'] = True
-   opts_std['ncp'] = 500 
-   opts_std['result_handling'] = 'binary'     
-elif flag_type in ['ME', 'me']:
-   opts_std = model.simulate_options()
-   opts_std["CVode_options"]["verbosity"] = 50 
-   opts_std['ncp'] = 500 
-   opts_std['result_handling'] = 'binary'  
-else:    
-   print('There is no FMU for this platform')
-  
-# Provide various MSL and BPL versions
-if flag_vendor in ['JM', 'jm']:
-   MSL_usage = model.get('MSL.usage')[0]
-   MSL_version = model.get('MSL.version')[0]
-   BPL_version = model.get('BPL.version')[0]
-elif flag_vendor in ['OM', 'om']:
-   MSL_usage = '4.1.0 - used components: RealInput, RealOutput, CombiTimeTable, Types' 
-   MSL_version = '4.1.0'
-   BPL_version = 'Bioprocess Library version 2.3.2' 
-else:    
-   print('There is no FMU for this platform')
-
-# Simulation time
-simulationTime = 100.0
-prevFinalTime = 0
-
-# Dictionary of time discrete states
-timeDiscreteStates = {} 
-
-# Define a minimal compoent list of the model as a starting point for describe('parts')
-component_list_minimum = []
-
-# Provide process diagram on disk
-fmu_process_diagram ='IBPL_IEC_process_diagram_omnigraffle.png'
-
-#------------------------------------------------------------------------------------------------------------------
-#  Specific application constructs: stateValue, parValue, parLocation, parCheck, diagrams, newplot(), describe()
-#------------------------------------------------------------------------------------------------------------------
-   
-# Create stateValue that later will be used to store final state and used for initialization in 'cont':
-stateValue =  {}
-stateValue = model.get_states_list()
-stateValue.update(timeDiscreteStates)
-
-# Create dictionaries parValue and parLocation
-parValue = {}
-
-parValue['diameter'] = 7.136
-parValue['height'] = 20.0
-parValue['x_m'] = 0.30
-parValue['k1'] = 0.3
-parValue['k2'] = 0.05
-parValue['k3'] = 0.05
-parValue['k4'] = 0.3
-parValue['Q_av'] = 3.0
-
-parValue['E_start'] = 0.0
-
-parValue['P_in'] = 0.3
-parValue['A_in'] = 0.3
-parValue['E_in'] = 0
-parValue['E_in_desorption_buffer'] = 0.3
-
-parValue['LFR'] = 0.67
-
-parValue['scale_volume'] = True
-parValue['gradient'] = True
-parValue['start_adsorption'] = 0
-parValue['stop_adsorption'] = 67
-parValue['start_desorption'] = 200
-parValue['x_start_desorption'] = 0.2
-parValue['stationary_desorption'] = 500
-parValue['stop_desorption'] = 600
-parValue['start_pooling'] = 308
-parValue['stop_pooling'] = 600
-
-#parValue['uv_start_trend'] = 0
-parValue['start_uv'] = -1
-parValue['stop_uv'] = -2
-
-parLocation = {}
-parLocation['diameter'] = 'column.diameter'
-parLocation['height'] = 'column.height'
-parLocation['x_m'] = 'column.x_m'
-parLocation['k1'] = 'column.k1'
-parLocation['k2'] = 'column.k2'
-parLocation['k3'] = 'column.k3'
-parLocation['k4'] = 'column.k4'
-parLocation['Q_av'] = 'column.Q_av'
-
-parLocation['E_start'] = 'column.column_section[1].c_start[3]'
-
-parLocation['P_in'] = 'tank_sample.c_in[1]'
-parLocation['A_in'] = 'tank_sample.c_in[2]'
-parLocation['E_in'] = 'tank_sample.c_in[3]'
-parLocation['E_in_desorption_buffer'] = 'tank_buffer2.c_in[3]'
-
-parLocation['LFR'] = 'u'
-
-parLocation['scale_volume'] = 'scale_volume'
-parLocation['gradient'] = 'control_desorption_buffer.gradient'
-parLocation['start_adsorption'] = 'control_sample.start'
-parLocation['stop_adsorption'] = 'control_sample.stop'
-parLocation['start_desorption'] = 'control_desorption_buffer.start'
-parLocation['x_start_desorption'] = 'control_desorption_buffer.x_start'
-parLocation['stationary_desorption'] = 'control_desorption_buffer.stationary'
-parLocation['stop_desorption'] = 'control_desorption_buffer.stop'
-parLocation['start_pooling'] = 'control_pooling.start'
-parLocation['stop_pooling'] = 'control_pooling.stop'
-
-#parLocation['uv_start_trend'] = 'control_pooling2.uv_start_trend'
-parLocation['start_uv'] = 'control_pooling.start_uv_pooling'
-parLocation['stop_uv'] = 'control_pooling.stop_uv_pooling'
-
-# Extra and also duplicate names only for describe()     
-parLocation['VFR'] = 'F'
-parLocation['area'] = 'column.area'
-parLocation['V'] = 'column.V'
-parLocation['V_m'] = 'column.V_m'
-
-# Parameter value check - especially for hysteresis to avoid runtime error
-parCheck = []
-parCheck.append("parValue['start_adsorption'] <= parValue['stop_adsorption']")
-parCheck.append("parValue['start_desorption'] <= parValue['stationary_desorption']")
-parCheck.append("parValue['stationary_desorption'] <= parValue['stop_desorption']")
-parCheck.append("parValue['start_uv'] > parValue['stop_uv']")
-
-# Create list of diagrams to be plotted by simu()
-diagrams = []
-
-# Define standard plots
-def profile(t_n, id):
-    data = np.zeros(9)
-    data[0] = sim_res['time'][t_n]
-    for j in list(range(1,9)):
-        data[j] = sim_res['column.column_section[' + str(j) + '].c[' + str(id) + ']'][t_n]
-    return data
 
 def newplot(title='IEC', plotType='Loading'):
    """ Standard plot window 
        title = '' """
-   
-   # Globals
-   global ax1, ax2, ax3, ax4, ax5, ax6    
-   global ax11, ax12, ax21, ax22
-    
+       
    # Reset pens
-   setLines()
+   resetPen()
 
    # Plot diagram 
    if plotType == 'Loading':
          
-      # Part of plot made before simulation
-      plt.figure()
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(2,1,2)
+      
+      ax.clear()
+      ax.append(ax1)
+      ax.append(ax2)
     
-      ax1.set_title(title)
-      ax1.grid()
-      ax1.set_ylabel('c[PS] and c[AS][mg/mL]')
+      ax[0].set_title(title)
+      ax[0].grid()
+      ax[0].set_ylabel('c[PS] and c[AS][mg/mL]')
     
-      ax2.grid()
-      ax2.set_ylabel('c[PS] and c[AS][mg/mL]')
-      ax2.set_xlabel('Sections in column - inlet to outlet') 
+      ax[1].grid()
+      ax[1].set_ylabel('c[PS] and c[AS][mg/mL]')
+      ax[1].set_xlabel('Sections in column - inlet to outlet') 
       
       # Part of plot made after simulation
       diagrams.clear()
-      diagrams.append("ax1.plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(50,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(150,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(200,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(250,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(300,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(350,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(400,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(450,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(500,4)[1:], 'b')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(10,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(50,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(150,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(200,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(250,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(300,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(350,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(400,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(450,5)[1:], 'r')")
-      diagrams.append("ax1.plot(list(range(1,9)), profile(500,5)[1:], 'r')")
-      diagrams.append("ax2.plot(list(range(1,9)), profile(500,4)[1:], 'b*-')")      
-      diagrams.append("ax2.plot(list(range(1,9)), profile(500,5)[1:], 'r*-')")      
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(50,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(150,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(200,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(250,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(300,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(350,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(400,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(450,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(500,4)[1:], 'b')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(10,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(50,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(150,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(200,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(250,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(300,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(350,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(400,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(450,5)[1:], 'r')")
+      diagrams.append("ax[0].plot(list(range(1,9)), profile(500,5)[1:], 'r')")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(500,4)[1:], 'b*-')")      
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(500,5)[1:], 'r*-')")   
         
    elif plotType == 'Loading-combined':
       
-      # Part of plot made before simulation   
-      plt.figure()
       ax11 = plt.subplot(2,2,1)
       ax12 = plt.subplot(2,2,2)
       ax21 = plt.subplot(2,2,3)
       ax22 = plt.subplot(2,2,4)
 
-      ax11.set_title(title)
-      ax11.grid()
-      ax11.set_ylabel('c[P] and c[A][mg/mL]')
+      ax.clear()
+      ax.append(ax11)
+      ax.append(ax12)
+      ax.append(ax21)
+      ax.append(ax22)
 
-      ax12.grid()
-      ax12.set_ylabel('c[PS] and c[AS][mg/mL]')
+      ax[0].set_title(title)
+      ax[0].grid()
+      ax[0].set_ylabel('c[P] and c[A][mg/mL]')
+
+      ax[1].grid()
+      ax[1].set_ylabel('c[PS] and c[AS][mg/mL]')
            
-      ax21.grid()
-      ax21.set_ylabel('Tank_waste [mL]')
-      ax21.set_xlabel('Time [min]')
+      ax[2].grid()
+      ax[2].set_ylabel('Tank_waste [mL]')
+      ax[2].set_xlabel('Time [min]')
    
-      ax22.grid()
-      ax22.set_ylabel('c[PS] and c[AS][mg/mL]')       
-      ax22.set_xlabel('Section in column - inlet to outlet') 
+      ax[3].grid()
+      ax[3].set_ylabel('c[PS] and c[AS][mg/mL]')       
+      ax[3].set_xlabel('Section in column - inlet to outlet') 
 
       # Part of plot made after simulation
       diagrams.clear()    
-      diagrams.append("ax11.plot(sim_res['time'], sim_res['tank_mixing.outlet.c[1]'], color='b', linestyle=linetype)")           
-      diagrams.append("ax12.plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(50,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(150,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(200,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(250,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(300,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(350,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(400,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(450,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(10,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(50,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(150,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(200,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(250,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(300,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(350,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(400,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(450,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax12.plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)")
-      diagrams.append("ax21.plot(sim_res['time'], sim_res['tank_waste.V'], color='b', linestyle=linetype)")
-      diagrams.append("ax22.plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)")      
-      diagrams.append("ax22.plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)")  
+      diagrams.append("ax[0].plot(sim_res['time'], sim_res['tank_mixing.outlet.c[1]'], color='b', linestyle=linetype)")           
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(50,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(150,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(200,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(250,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(300,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(350,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(400,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(450,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(10,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(50,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(150,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(200,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(250,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(300,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(350,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(400,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(450,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[1].plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)")
+      diagrams.append("ax[2].plot(sim_res['time'], sim_res['tank_waste.V'], color='b', linestyle=linetype)")
+      diagrams.append("ax[3].plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)")      
+      diagrams.append("ax[3].plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)")  
+      
       
    elif plotType == 'Elution':
       
-      # Part of plot made before simulation   
-      plt.figure()
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(2,1,2)
+
+      ax.clear()
+      ax.append(ax1)
+      ax.append(ax2)
     
-      ax1.set_title(title)
-      ax1.grid()
-      ax1.set_ylabel('c[P] and c[A]  [mg/mL]')
+      ax[0].set_title(title)
+      ax[0].grid()
+      ax[0].set_ylabel('c[P] and c[A]  [mg/mL]')
     
-      ax2.grid()
-      ax2.set_ylabel('c[P]+c[A] c[E]  [mg/mL]')
-      ax2.set_xlabel('Time [min] - relative start desorption')       
+      ax[1].grid()
+      ax[1].set_ylabel('c[P]+c[A] c[E]  [mg/mL]')
+      ax[1].set_xlabel('Time [min] - relative start desorption')       
 
       # Part of plot made after simulation
       diagrams.clear()    
-      diagrams.append("ax1.plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
+      diagrams.append("ax[0].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)")
-      diagrams.append("ax1.plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
+      diagrams.append("ax[0].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)")
-      diagrams.append("ax1.set_xlim(left=0)")
-      diagrams.append("ax1.set_ylim([0,0.45])")
-      diagrams.append("ax1.legend()")
+      diagrams.append("ax[0].set_xlim(left=0)")
+      diagrams.append("ax[0].set_ylim([0,0.45])")
+      diagrams.append("ax[0].legend()")
  
-      diagrams.append("ax2.plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
+      diagrams.append("ax[1].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)")
-      diagrams.append("ax2.plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
+      diagrams.append("ax[1].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
                            0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)")
-      diagrams.append("ax2.set_xlim(left=0)") 
-      diagrams.append("ax2.set_ylim([0,0.45])")
-      diagrams.append("ax2.legend()")
-      
+      diagrams.append("ax[1].set_xlim(left=0)") 
+      diagrams.append("ax[1].set_ylim([0,0.45])")
+      diagrams.append("ax[1].legend()")
+
    elif plotType == 'Elution-vs-volume':
          
       # Part of plot made before simulation   
@@ -571,42 +321,47 @@ def newplot(title='IEC', plotType='Loading'):
 
    elif plotType == 'Elution-combined':
          
-      # Part of plot made before simulation
-      plt.figure()
       ax1 = plt.subplot(2,1,1)
       ax2 = plt.subplot(8,1,5)
       ax3 = plt.subplot(8,1,6)
       ax4 = plt.subplot(8,1,7)
       ax5 = plt.subplot(8,1,8)
+      
+      ax.clear()
+      ax.append(ax1)
+      ax.append(ax2)
+      ax.append(ax3)
+      ax.append(ax4)
+      ax.append(ax5)
     
-      ax1.set_title(title)
-      ax1.grid()
-      ax1.set_ylabel('c[P], c[A], c[E] [mg/mL]')
+      ax[0].set_title(title)
+      ax[0].grid()
+      ax[0].set_ylabel('c[P], c[A], c[E] [mg/mL]')
     
-      ax2.grid()
-      ax2.set_ylabel('F sample [mL/min]')
+      ax[1].grid()
+      ax[1].set_ylabel('F sample [mL/min]')
 
-      ax3.grid()
-      ax3.set_ylabel('F buff1 [mL/min]')
+      ax[2].grid()
+      ax[2].set_ylabel('F buff1 [mL/min]')
 
-      ax4.grid()
-      ax4.set_ylabel('F buff2 [mL/min]')
+      ax[3].grid()
+      ax[3].set_ylabel('F buff2 [mL/min]')
 
-      ax5.grid()
-      ax5.set_ylabel('V prod [L]')
-      ax5.set_xlabel('Time [min]')  
+      ax[4].grid()
+      ax[4].set_ylabel('V prod [L]')
+      ax[4].set_xlabel('Time [min]')  
 
       # Part of plot made after simulation
       diagrams.clear()    
-      diagrams.append("ax1.plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)")
-      diagrams.append("ax1.plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)")
-      diagrams.append("ax1.plot(sim_res['time'], 0.05*sim_res['column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)")
-      diagrams.append("ax1.legend()")
+      diagrams.append("ax[0].plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)")
+      diagrams.append("ax[0].plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)")
+      diagrams.append("ax[0].plot(sim_res['time'], 0.05*sim_res['column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)")
+      diagrams.append("ax[0].legend()")
       
-      diagrams.append("ax2.step(sim_res['time'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)")     
-      diagrams.append("ax3.plot(sim_res['time'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)")                
-      diagrams.append("ax4.plot(sim_res['time'], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)") 
-      diagrams.append("ax5.step(sim_res['time'], sim_res['tank_harvest.V'], color='g', linestyle=linetype)") 
+      diagrams.append("ax[1].step(sim_res['time'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)")     
+      diagrams.append("ax[2].plot(sim_res['time'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)")                
+      diagrams.append("ax[3].plot(sim_res['time'], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)") 
+      diagrams.append("ax[4].step(sim_res['time'], sim_res['tank_harvest.V'], color='g', linestyle=linetype)") 
   
    elif plotType == 'Elution-vs-volume-combined':
          
@@ -755,52 +510,51 @@ def newplot(title='IEC', plotType='Loading'):
 
    elif plotType == 'Elution-conductivity-vs-CV-combined-all':
          
-      # Part of plot made before simulation
-      plt.figure()
-      ax1 = plt.subplot(2,1,1)
-      
+      ax1 = plt.subplot(2,1,1)    
       ax2 = plt.subplot(10,1,6)
       ax3 = plt.subplot(10,1,7)
       ax4 = plt.subplot(10,1,8)
       ax5 = plt.subplot(10,1,9)
       ax6 = plt.subplot(10,1,10)
       
-      #ax2 = plt.subplot(8,1,4)
-      #ax3 = plt.subplot(8,1,5)
-      #ax4 = plt.subplot(8,1,6)
-      #ax5 = plt.subplot(8,1,7)
-      #ax6 = plt.subplot(8,1,8)
- 
-      ax1.set_title(title)
-      ax1.grid()
-      ax1.set_ylabel('c[P], c[A] [mg/mL]')
+      ax.clear()
+      ax.append(ax1)
+      ax.append(ax2)
+      ax.append(ax3)
+      ax.append(ax4)
+      ax.append(ax5)
+      ax.append(ax6)
 
-      ax2.grid()
-      ax2.set_ylabel('c[E]')      
+      ax[0].set_title(title)
+      ax[0].grid()
+      ax[0].set_ylabel('c[P], c[A] [mg/mL]')
 
-      ax3.grid()
-      ax3.set_ylabel('F_sample')
+      ax[1].grid()
+      ax[1].set_ylabel('c[E]')      
 
-      ax4.grid()
-      ax4.set_ylabel('Fb1')
+      ax[2].grid()
+      ax[2].set_ylabel('F_sample')
 
-      ax5.grid()
-      ax5.set_ylabel('Fb2')
+      ax[3].grid()
+      ax[3].set_ylabel('Fb1')
 
-      ax6.grid()
-      ax6.set_ylabel('V_pool')
-      ax6.set_xlabel('Pumped liquid volume [CV]')
+      ax[4].grid()
+      ax[4].set_ylabel('Fb2')
+
+      ax[5].grid()
+      ax[5].set_ylabel('V_pool')
+      ax[5].set_xlabel('Pumped liquid volume [CV]')
 
       # Part of plot made after simulation
       diagrams.clear()    
-      diagrams.append("ax1.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)")
-      diagrams.append("ax1.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)")
-      diagrams.append("ax1.legend()")
-      diagrams.append("ax2.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)")      
-      diagrams.append("ax3.step(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)")     
-      diagrams.append("ax4.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)")                
-      diagrams.append("ax5.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)") 
-      diagrams.append("ax6.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)") 
+      diagrams.append("ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)")
+      diagrams.append("ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)")
+      diagrams.append("ax[0].legend()")
+      diagrams.append("ax[1].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)")      
+      diagrams.append("ax[2].step(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)")     
+      diagrams.append("ax[3].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)")                
+      diagrams.append("ax[4].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)") 
+      diagrams.append("ax[5].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)") 
 
 
    elif plotType == 'Elution-conductivity-combined-all':
@@ -821,8 +575,8 @@ def newplot(title='IEC', plotType='Loading'):
       ax2.grid()
       ax2.set_ylabel('c [mS/cm]')      
 
-      ax3.grid()
-      ax3.set_ylabel('F load [mL/min]')
+      ax[2].grid()
+      ax[2].set_ylabel('F load [mL/min]')
 
       ax4.grid()
       ax4.set_ylabel('Fb1 [mL/min]')
@@ -844,7 +598,7 @@ def newplot(title='IEC', plotType='Loading'):
       
       diagrams.append("ax2.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['conductivity_detector.value'], color='m', linestyle=linetype)")      
-      diagrams.append("ax3.step(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+      diagrams.append("ax[2].step(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)")     
       diagrams.append("ax4.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)")                
@@ -1034,345 +788,7 @@ def describe(name, decimals=3):
       describe_general(name, decimals)
          
 #------------------------------------------------------------------------------------------------------------------
-#  General code 
-FMU_explore = 'FMU-explore version 1.0.3'
-#------------------------------------------------------------------------------------------------------------------
-
-# Define function par() for parameter update
-def par(*x, parValue=parValue, **x_kwarg):
-   """ Set parameter values if available in the predefined dictionaryt parValue. """
-   x_kwarg.update(*x)
-   x_temp = {}
-   for key in x_kwarg.keys():
-      if key in parValue.keys():
-         x_temp.update({key: x_kwarg[key]})
-      else:
-         print('Error:', key, '- seems not an accessible parameter - check the spelling')
-   parValue.update(x_temp)
-   
-   parErrors = [requirement for requirement in parCheck if not(eval(requirement))]
-   if not parErrors == []:
-      print('Error - the following requirements do not hold:')
-      for index, item in enumerate(parErrors): print(item)
-
-# Define function init() for initial values update
-def init(*x, parValue=parValue, **x_kwarg):
-   """ Set initial values and the name should contain string '_start' to be accepted.
-       The function can handle general parameter string location names if entered as a dictionary. """
-   x_kwarg.update(*x)
-   x_init={}
-   for key in x_kwarg.keys():
-      if '_start' in key: 
-         x_init.update({key: x_kwarg[key]})
-      else:
-         print('Error:', key, '- seems not an initial value, use par() instead - check the spelling')
-   parValue.update(x_init)
-
-# Define how to read dictionary for parameter values
-def readParValue(file, sheet, parValue=parValue):
-   """ Read parameter short names and values from an Excel-file from defined sheet. For use in the notebook!
-       Return a dictionary."""
-   parValue_local = {} 
-   table = pd.ExcelFile(file).parse(sheet)
-   for k in list(range(len(table))):
-      parValue_local[table['Par'][k]] = table['Value'][k]
-   parValue.update(parValue_local)
-
-# Define how to read dictionary for parameter location
-def readParLocation(file, sheets, parLocation=parLocation):
-   """ Read parameter short and long names from an Excel-file sheet by sheet. For use in the notebook!
-       Return a dictionary."""
-   parLocation_local = {}
-   for sheet in sheets:
-      table = pd.ExcelFile(file).parse(sheet)
-      for k in list(range(len(table))):
-         parLocation_local[table['Par'][k]] = table['Location'][k]
-   parLocation.update(parLocation_local)
-      
-def disp(name='', decimals=3, mode='short', parValue=parValue, parLocation=parLocation):
-   """ Display intial values and parameters in the model that include "name" and is in parLocation list.
-       Note, it does not take the value from the dictionary par but from the model. """
-   global model
-
-   def dict_reverser(d):
-      seen = set()
-      return {v: k for k, v in d.items() if v not in seen or seen.add(v)}
-   
-   if mode in ['short']:
-      k = 0
-      for Location in [parLocation[k] for k in parValue.keys()]:
-         if name in Location:
-            if type(model.get(Location)[0]) != np.bool_:
-               print(dict_reverser(parLocation)[Location] , ':', np.round(model.get(Location)[0],decimals))
-            else:
-               print(dict_reverser(parLocation)[Location] , ':', model.get(Location)[0])               
-         else:
-            k = k+1
-      if k == len(parLocation):
-         for parName in parValue.keys():
-            if name in parName:
-               if type(model.get(Location)[0]) != np.bool_:
-                  print(parName,':', np.round(model.get(parLocation[parName])[0],decimals))
-               else: 
-                  print(parName,':', model.get(parLocation[parName])[0])
-   if mode in ['long','location']:
-      k = 0
-      for Location in [parLocation[k] for k in parValue.keys()]:
-         if name in Location:
-            if type(model.get(Location)[0]) != np.bool_:       
-               print(Location,':', dict_reverser(parLocation)[Location] , ':', np.round(model.get(Location)[0],decimals))
-         else:
-            k = k+1
-      if k == len(parLocation):
-         for parName in parValue.keys():
-            if name in parName:
-               if type(model.get(Location)[0]) != np.bool_:
-                  print(parLocation[parName], ':', dict_reverser(parLocation)[Location], ':', parName,':', 
-                     np.round(model.get(parLocation[parName])[0],decimals))
-
-# Line types
-def setLines(lines=['-','--',':','-.']):
-   """Set list of linetypes used in plots"""
-   global linecycler
-   linecycler = cycle(lines)
-
-# Show plots from sim_res, just that
-def show(diagrams=diagrams):
-   """Show diagrams chosen by newplot()"""
-   # Plot pen
-   linetype = next(linecycler)    
-   # Plot diagrams 
-   for command in diagrams: eval(command)
-
-# Simulation
-def simu(simulationTimeLocal=simulationTime, mode='Initial', options=opts_std, \
-         diagrams=diagrams,timeDiscreteStates=timeDiscreteStates, stateValue=stateValue, \
-         parValue=parValue, parLocation=parLocation, fmu_model=fmu_model):         
-   """Model loaded and given intial values and parameter before,
-      and plot window also setup before."""
-    
-   # Global variables
-   global model, prevFinalTime, sim_res, t
-   
-   # Simulation flag
-   simulationDone = False
-   
-   # Transfer of argument to global variable
-   simulationTime = simulationTimeLocal 
-      
-   # Check parValue
-   value_missing = 0
-   for key in parValue.keys():
-      if parValue[key] in [np.nan, None, '']:
-         print('Value missing:', key)
-         value_missing =+1
-   if value_missing>0: return
-         
-   # Load model
-   if model is None:
-      model = load_fmu(fmu_model) 
-   model.reset()
-      
-   # Run simulation
-   if mode in ['Initial', 'initial', 'init']:
-      # Set parameters and intial state values:
-      for key in parValue.keys():
-         model.set(parLocation[key],parValue[key])   
-      # Simulate
-      sim_res = model.simulate(final_time=simulationTime, options=options)  
-      simulationDone = True
-   elif mode in ['Continued', 'continued', 'cont']:
-
-      if prevFinalTime == 0: 
-         print("Error: Simulation is first done with default mode = init'")      
-      else:
-         
-         # Set parameters and intial state values:
-         for key in parValue.keys():
-            model.set(parLocation[key],parValue[key])                
-
-         for key in stateValue.keys():
-            if not key[-1] == ']':
-               if key[-3:] == 'I.y': 
-                  model.set(key[:-10]+'I_start', stateValue[key]) 
-               elif key[-3:] == 'D.x': 
-                  model.set(key[:-10]+'D_start', stateValue[key]) 
-               else:
-                  model.set(key+'_start', stateValue[key])
-            elif key[-3] == '[':
-               model.set(key[:-3]+'_start'+key[-3:], stateValue[key]) 
-            elif key[-4] == '[':
-               model.set(key[:-4]+'_start'+key[-4:], stateValue[key]) 
-            elif key[-5] == '[':
-               model.set(key[:-5]+'_start'+key[-5:], stateValue[key]) 
-            else:
-               print('The state vecotr has more than 1000 states')
-               break
-
-         # Simulate
-         sim_res = model.simulate(start_time=prevFinalTime,
-                                 final_time=prevFinalTime + simulationTime,
-                                 options=options) 
-         simulationDone = True             
-   else:
-      print("Simulation mode not correct")
-
-   if simulationDone:
-    
-      # Extract data
-      t = sim_res['time']
- 
-      # Plot diagrams
-      linetype = next(linecycler)    
-      for command in diagrams: eval(command)
-            
-      # Store final state values stateValue:
-      for key in list(stateValue.keys()): stateValue[key] = model.get(key)[0]        
-
-      # Store time from where simulation will start next time
-      prevFinalTime = model.time
-   
-   else:
-      print('Error: No simulation done')
-      
-# Describe model parts of the combined system
-def describe_parts(component_list=[]):
-   """List all parts of the model""" 
-       
-   def model_component(variable_name):
-      i = 0
-      name = ''
-      finished = False
-      if not variable_name[0] == '_':
-         while not finished:
-            name = name + variable_name[i]
-            if i == len(variable_name)-1:
-                finished = True 
-            elif variable_name[i+1] in ['.', '(']: 
-                finished = True
-            else: 
-                i=i+1
-      if name in ['der', 'temp_1', 'temp_2', 'temp_3', 'temp_4', 'temp_5', 'temp_6', 'temp_7']: name = ''
-      return name
-    
-   variables = list(model.get_model_variables().keys())
-        
-   for i in range(len(variables)):
-      component = model_component(variables[i])
-      if (component not in component_list) \
-      & (component not in ['','BPL', 'Customer', 'today[1]', 'today[2]', 'today[3]', 'temp_2', 'temp_3']):
-         component_list.append(component)
-      
-   print(sorted(component_list, key=str.casefold))
-   
-def describe_MSL(flag_vendor=flag_vendor):
-   """List MSL version and components used"""
-   print('MSL:', MSL_usage)
- 
-# Describe parameters and variables in the Modelica code
-def describe_general(name, decimals, parLocation=parLocation):
-  
-   if name == 'time':
-      description = 'Time'
-      unit = 'h'
-      print(description,'[',unit,']')
-      
-   elif name == 'process':
-      print(model.get_description())    
-      
-   elif name in parLocation.keys():
-      description = model.get_variable_description(parLocation[name])
-      value = model.get(parLocation[name])[0]
-      try:
-         unit = model.get_variable_unit(parLocation[name])
-      except FMUException:
-         unit =''
-      if unit =='':
-         if type(value) != np.bool_:
-            print(description, ':', np.round(value, decimals))
-         else:
-            print(description, ':', value)            
-      else:
-        print(description, ':', np.round(value, decimals), '[',unit,']')
-                  
-   else:
-      description = model.get_variable_description(name)
-      value = model.get(name)[0]
-      try:
-         unit = model.get_variable_unit(name)
-      except FMUException:
-         unit =''
-      if unit =='':
-         if type(value) != np.bool_:
-            print(description, ':', np.round(value, decimals))
-         else:
-            print(description, ':', value)     
-      else:
-         print(description, ':', np.round(value, decimals), '[',unit,']')
-         
-# Plot process diagram
-def process_diagram(fmu_model=fmu_model, fmu_process_diagram=fmu_process_diagram):   
-   try:
-       process_diagram = zipfile.ZipFile(fmu_model, 'r').open('documentation/processDiagram.png')
-   except KeyError:
-       print('No processDiagram.png file in the FMU, but try the file on disk.')
-       process_diagram = fmu_process_diagram
-   try:
-       plt.imshow(img.imread(process_diagram))
-       plt.axis('off')
-       plt.show()
-   except FileNotFoundError:
-       print('And no such file on disk either')
-         
-# Describe framework
-def BPL_info():
-   print()
-   print('Model for the process has been setup. Key commands:')
-   print(' - par()       - change of parameters and initial values')
-   print(' - init()      - change initial values only')
-   print(' - simu()      - simulate and plot')
-   print(' - newplot()   - make a new plot')
-   print(' - show()      - show plot from previous simulation')
-   print(' - disp()      - display parameters and initial values from the last simulation')
-   print(' - describe()  - describe culture, broth, parameters, variables with values/units')
-   print()
-   print('Note that both disp() and describe() takes values from the last simulation')
-   print('and the command process_diagram() brings up the main configuration')
-   print()
-   print('Brief information about a command by help(), eg help(simu)') 
-   print('Key system information is listed with the command system_info()')
-
-def system_info():
-   """Print system information"""
-   FMU_type = model.__class__.__name__
-   print()
-   print('System information')
-   print(' -OS:', platform.system())
-   print(' -Python:', platform.python_version())
-   try:
-       scipy_ver = scipy.__version__
-       print(' -Scipy:',scipy_ver)
-   except NameError:
-       print(' -Scipy: not installed in the notebook')
-   print(' -PyFMI:', version('pyfmi'))
-   print(' -FMU by:', model.get_generation_tool())
-   print(' -FMI:', model.get_version())
-   print(' -Type:', FMU_type)
-   print(' -Name:', model.get_name())
-   print(' -Generated:', model.get_generation_date_and_time())
-   print(' -MSL:', MSL_version)    
-   print(' -Description:', BPL_version)   
-   print(' -Interaction:', FMU_explore)
-   
-def SDG(explanation=False):
-  if explanation:
-    print('"Soli Deo Gloria"')
-    print(' It is latin and means "To the honour of God".') 
-    print(' The great composer Johan Sebastian Bach used to end his compositions with this small remark SDG.')
-    print(' And I like to do that too :).')    
-   
-#------------------------------------------------------------------------------------------------------------------
 #  Startup
 #------------------------------------------------------------------------------------------------------------------
 
-BPL_info()
+FMU_explore_info()
