@@ -80,7 +80,6 @@ else:
    
 # Simulation time
 simulationTime = 100.0
-prevFinalTime = 0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
