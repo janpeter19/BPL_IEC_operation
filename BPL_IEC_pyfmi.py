@@ -1,7 +1,8 @@
-# setup applicateion data BPL_IEC
+# Setup applicateion data BPL_IEC_pyfmi
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
 # 2026-08-28 - Created
+# 2026-09-14 - Move definition of stateValue to the fmu_explore_pyfmi module ver 1.2.0
 #------------------------------------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------------------------------------------
@@ -83,11 +84,6 @@ simulationTime = 100.0
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
-
-# Create stateValue that later will be used to store final state and used for initialization in 'cont':
-stateValue =  {}
-stateValue = model.get_states_list()
-stateValue.update(timeDiscreteStates)
 
 # Define a minimal compoent list of the model as a starting point for describe('parts')
 component_list_minimum = []
@@ -186,6 +182,10 @@ ax = []
 
 # Create list of pens for the diagrams
 lines = ['-','--',':','-.']
+
+#------------------------------------------------------------------------------------------------------------------
+#  Specific application constructs: external function
+#------------------------------------------------------------------------------------------------------------------
 
 # Define profile for standard diagrams
 def profile(t_n, id):
