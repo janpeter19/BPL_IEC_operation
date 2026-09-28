@@ -1,8 +1,22 @@
-# setup application functions BPL_IEC_fmpy_explore dependent on previous import of functions from fmu_explore 
+# Setup application functions BPL_IEC_fmpy_explore dependent on previous import of functions from fmu_explore 
 # Author: Jan Peter Axelsson
 #------------------------------------------------------------------------------------------------------------------
 # 2026-09-10 - Created
+# 2026-09-28 - Brought in matlotlib since used here and numpy also
+# 2026-09-28 - Change indentaiton from 3 spaces to 4 using black
 #------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------
+#  Framework
+# -------------------------------------------------------------------------------------------------
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -------------------------------------------------------------------------------------------------
+#  Specific application functions: newplot(), describe(), profile()
+# -------------------------------------------------------------------------------------------------
+
 
 def newplot(title='IEC', plotType='Loading'):
    """ Standard plot window 
@@ -738,7 +752,7 @@ def newplot(title='IEC', plotType='Loading'):
    else:
       print("Plot window type not correct") 
 
-# Define and extend describe for the current application
+
 def describe(name, decimals=3):
    """Look up description of culture, media, as well as parameters and variables in the model code"""
 
@@ -775,9 +789,11 @@ def describe(name, decimals=3):
 
    else:
       describe_general(name, decimals)
-            
-#------------------------------------------------------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------------------------------------
 #  Startup
-#------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------
+
 
 FMU_explore_info()
