@@ -746,12 +746,12 @@ def newplot(title="IEC", plotType="Loading"):
 
         # Part of plot made before simulation
         plt.figure()
-        ax[0] = plt.subplot(2, 1, 1)
-        ax[1] = plt.subplot(10, 1, 6)
-        ax[2] = plt.subplot(10, 1, 7)
-        ax[3] = plt.subplot(10, 1, 8)
-        ax[4] = plt.subplot(10, 1, 9)
-        ax[5] = plt.subplot(10, 1, 10)
+        ax1 = plt.subplot(2, 1, 1)
+        ax2 = plt.subplot(10, 1, 6)
+        ax3 = plt.subplot(10, 1, 7)
+        ax4 = plt.subplot(10, 1, 8)
+        ax5 = plt.subplot(10, 1, 9)
+        ax6 = plt.subplot(10, 1, 10)
 
         # ax[0].set_title(title)
         ax[0].grid()
