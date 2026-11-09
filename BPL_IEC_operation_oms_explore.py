@@ -802,15 +802,15 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append(
             "ax[3].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
-                       sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+                       sim_res['Column_system.tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax[4].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
-                       sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+                       sim_res['Column_system.tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax[5].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
-                       sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+                       sim_res['Column_system.tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-pooling":
