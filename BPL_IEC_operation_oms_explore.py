@@ -534,7 +534,7 @@ def newplot(title="IEC", plotType="Loading"):
 
         diagrams.append(
             "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
-                                sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+                                sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax3.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
@@ -601,7 +601,7 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append(
             "ax3.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
-                                sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+                                sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax4.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
@@ -666,7 +666,7 @@ def newplot(title="IEC", plotType="Loading"):
             "ax[1].plot(sim_res['Column_system.ackF'], sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(sim_res['Column_system.ackF'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax[2].step(sim_res['Column_system.ackF'], sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax[3].plot(sim_res['Column_system.ackF'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
@@ -729,16 +729,16 @@ def newplot(title="IEC", plotType="Loading"):
             "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax[2].step(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+            "ax[3].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+            "ax[4].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[5].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+            "ax[5].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-conductivity-combined-all":
@@ -798,7 +798,7 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append(
             "ax[2].step(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
-                       sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+                       sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
             "ax[3].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
