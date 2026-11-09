@@ -5,6 +5,7 @@
 # 2026-09-28 - Decrease the framework to what is necessary and move matlotlib and numpy to the other setup-file
 # 2026-09-28 - Change indentaiton from 3 spaces to 4 using black
 # 2026-10-24 - Added clean-up section at the end
+# 2026-11-09 - Adjusted to oms
 # ------------------------------------------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------------------------
@@ -46,30 +47,28 @@ def newplot(title="IEC", plotType="Loading"):
 
         # Part of plot made after simulation
         diagrams.clear()
-        diagrams.append(
-            "ax[0].plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)"
-        )
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(50,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(150,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(200,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(250,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(300,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(350,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(400,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(450,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(500,4)[1:], 'b')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(10,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(50,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(150,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(200,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(250,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(300,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(350,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(400,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(450,5)[1:], 'r')")
-        diagrams.append("ax[0].plot(list(range(1,9)), profile(500,5)[1:], 'r')")
-        diagrams.append("ax[1].plot(list(range(1,9)), profile(500,4)[1:], 'b*-')")
-        diagrams.append("ax[1].plot(list(range(1,9)), profile(500,5)[1:], 'r*-')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(10, 4, t, sim_res)[1:], color='b', linestyle=linetype)")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(50,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(150,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(200,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(250,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(300,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(350,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(400,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(450,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(500,4, t, sim_res)[1:], 'b')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(10,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(50,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(150,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(200,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(250,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(300,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(350,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(400,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(450,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[0].plot(list(range(1,9)), profile(500,5, t, sim_res)[1:], 'r')")
+        diagrams.append("ax[1].plot(list(range(1,9)), profile(500,4, t, sim_res)[1:], 'b*-')")
+        diagrams.append("ax[1].plot(list(range(1,9)), profile(500,5, t, sim_res)[1:], 'r*-')")
 
     elif plotType == "Loading-combined":
 
@@ -102,76 +101,76 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['time'], sim_res['tank_mixing.outlet.c[1]'], color='b', linestyle=linetype)"
+            "ax[0].plot(t, sim_res['Column_system.tank_mixing.outlet.c[1]'], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(10,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(10,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(50,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(50,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(150,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(150,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(200,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(200,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(250,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(250,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(300,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(300,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(350,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(350,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(400,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(400,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(450,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(450,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(500,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(10,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(10,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(50,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(50,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(150,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(150,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(200,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(200,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(250,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(250,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(300,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(300,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(350,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(350,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(400,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(400,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(450,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(450,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)"
+            "ax[1].plot(list(range(1,9)), profile(500,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].plot(sim_res['time'], sim_res['tank_waste.V'], color='b', linestyle=linetype)"
+            "ax[2].plot(t, sim_res['Column_system.tank_waste.V'], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(list(range(1,9)), profile(500,4)[1:], color='b', linestyle=linetype)"
+            "ax[3].plot(list(range(1,9)), profile(500,4, t, sim_res)[1:], color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(list(range(1,9)), profile(500,5)[1:], color='r', linestyle=linetype)"
+            "ax[3].plot(list(range(1,9)), profile(500,5, t, sim_res)[1:], color='r', linestyle=linetype)"
         )
 
     elif plotType == "Elution":
@@ -194,28 +193,29 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax[0].plot(t-parValue['start_desorption']/model_get('control_desorption_buffer.scaling'), \
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax[0].plot(t-parValue['start_desorption']/model_get('control_desorption_buffer.scaling'), \
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].set_xlim(left=0)")
         diagrams.append("ax[0].set_ylim([0,0.45])")
         diagrams.append("ax[0].legend()")
 
         diagrams.append(
-            "ax[1].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
-                                sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
+            "ax[1].plot(t-parValue['start_desorption']/model_get('control_desorption_buffer.scaling'), \
+                                sim_res['Column_system.uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(sim_res['time']-parValue['start_desorption']/model.get('control_desorption_buffer.scaling'), \
-                           0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
+            "ax[1].plot(t-parValue['start_desorption']/model_get('control_desorption_buffer.scaling'), \
+                           0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax[1].set_xlim(left=0)")
         diagrams.append("ax[1].set_ylim([0,0.45])")
         diagrams.append("ax[1].legend()")
+
 
     elif plotType == "Elution-vs-volume":
 
@@ -318,11 +318,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.clear()
         diagrams.append(
             "ax1.plot(sim_res['ackF'], \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF'], \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
         diagrams.append("ax1.set_ylim([0,0.45])")
@@ -334,7 +334,7 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append(
             "ax2.plot(sim_res['ackF'], \
-                                0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
+                                0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
         diagrams.append("ax2.set_ylim([0,0.45])")
@@ -409,11 +409,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.clear()
         diagrams.append(
             "ax1.plot(sim_res['ackF'], \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF'], \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
         diagrams.append("ax1.legend()")
@@ -465,27 +465,27 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax[0].plot(t, sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['time'], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax[0].plot(t, sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['time'], 0.05*sim_res['column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)"
+            "ax[0].plot(t, 0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)"
         )
         diagrams.append("ax[0].legend()")
 
         diagrams.append(
-            "ax[1].step(sim_res['time'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax[1].step(t, sim_res['Column_system.tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].plot(sim_res['time'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+            "ax[2].plot(t, sim_res['Column_system.tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(sim_res['time'], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+            "ax[3].plot(t, sim_res['Column_system.tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].step(sim_res['time'], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+            "ax[4].step(t, sim_res['Column_system.tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-vs-volume-combined":
@@ -519,15 +519,15 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.clear()
         diagrams.append(
             "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                           0.05*sim_res['column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)"
+                           0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
 
@@ -583,15 +583,15 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.clear()
         diagrams.append(
             "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
         diagrams.append(
-            "ax1.set_ylim([0, 1.05*max(sim_res['column.column_section[8].outlet.c[1]'])])"
+            "ax1.set_ylim([0, 1.05*max(sim_res['Column_system.column.column_section[8].outlet.c[1]'])])"
         )
 
         diagrams.append(
@@ -655,10 +655,10 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax1.plot(sim_res['ackF'], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax1.plot(sim_res['ackF'], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
         diagrams.append(
@@ -679,64 +679,65 @@ def newplot(title="IEC", plotType="Loading"):
 
     elif plotType == "Elution-conductivity-vs-CV-combined-all":
 
+        # Part of plot made before simulation
+        plt.figure()
         ax1 = plt.subplot(2, 1, 1)
+
         ax2 = plt.subplot(10, 1, 6)
         ax3 = plt.subplot(10, 1, 7)
         ax4 = plt.subplot(10, 1, 8)
         ax5 = plt.subplot(10, 1, 9)
         ax6 = plt.subplot(10, 1, 10)
 
-        ax.clear()
-        ax.append(ax1)
-        ax.append(ax2)
-        ax.append(ax3)
-        ax.append(ax4)
-        ax.append(ax5)
-        ax.append(ax6)
+        # ax2 = plt.subplot(8,1,4)
+        # ax3 = plt.subplot(8,1,5)
+        # ax4 = plt.subplot(8,1,6)
+        # ax5 = plt.subplot(8,1,7)
+        # ax6 = plt.subplot(8,1,8)
 
-        ax[0].set_title(title)
-        ax[0].grid()
-        ax[0].set_ylabel("c[P], c[A] [mg/mL]")
+        ax1.set_title(title)
+        ax1.grid()
+        ax1.set_ylabel("c[P], c[A] [mg/mL]")
 
-        ax[1].grid()
-        ax[1].set_ylabel("c[E]")
+        ax2.grid()
+        ax2.set_ylabel("c[E]")
 
-        ax[2].grid()
-        ax[2].set_ylabel("F_sample")
+        ax3.grid()
+        ax3.set_ylabel("F_sample")
 
-        ax[3].grid()
-        ax[3].set_ylabel("Fb1")
+        ax4.grid()
+        ax4.set_ylabel("Fb1")
 
-        ax[4].grid()
-        ax[4].set_ylabel("Fb2")
+        ax5.grid()
+        ax5.set_ylabel("Fb2")
 
-        ax[5].grid()
-        ax[5].set_ylabel("V_pool")
-        ax[5].set_xlabel("Pumped liquid volume [CV]")
+        ax6.grid()
+        ax6.set_ylabel("V_pool")
+        ax6.set_xlabel("Pumped liquid volume [CV]")
 
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax1.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax1.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
-        diagrams.append("ax[0].legend()")
+        diagrams.append("ax1.legend()")
         diagrams.append(
-            "ax[1].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
-        )
-        diagrams.append(
-            "ax[2].step(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax2.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+            "ax3.step(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+            "ax4.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[5].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+            "ax5.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+        )
+        diagrams.append(
+            "ax6.plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-conductivity-combined-all":
@@ -757,8 +758,8 @@ def newplot(title="IEC", plotType="Loading"):
         ax2.grid()
         ax2.set_ylabel("c [mS/cm]")
 
-        ax[2].grid()
-        ax[2].set_ylabel("F load [mL/min]")
+        ax3.grid()
+        ax3.set_ylabel("F load [mL/min]")
 
         ax4.grid()
         ax4.set_ylabel("Fb1 [mL/min]")
@@ -773,33 +774,33 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                       sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax1.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+                       sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                       sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax1.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+                       sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax2.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax3.step(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax4.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax4.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax5.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax5.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax6.plot(sim_res['time']-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax6.plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                        sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
@@ -825,31 +826,31 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['time'] - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax1.plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['time'] - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax1.plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
         diagrams.append("ax1.set_ylim([0,0.45])")
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['time'] - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax2.plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax2.plot(sim_res['time'] - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                           0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
+            "ax2.plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+                           0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
         diagrams.append("ax2.set_ylim([0,0.45])")
         diagrams.append("ax2.legend()")
 
         diagrams.append(
-            "ax3.step(sim_res['time'] - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax3.step(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
                                 sim_res['control_pooling.out'], color='k', linestyle=linetype)"
         )
         diagrams.append("ax3.set_xlim(left=0)")
@@ -877,11 +878,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.clear()
         diagrams.append(
             "ax1.plot(sim_res['ackF']/model.get('column.V')[0], \
-                                sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
             "ax1.plot(sim_res['ackF']/model.get('column.V')[0], \
-                                sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+                                sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
         # diagrams.append("ax1.set_ylim([0,0.45])")
@@ -893,7 +894,7 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append(
             "ax2.plot(sim_res['ackF']/model.get('column.V')[0], \
-                           0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
+                           0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
         # diagrams.append("ax2.set_ylim([0,0.45])")
@@ -968,13 +969,13 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['time'], sim_res['column.outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax1.plot(t, sim_res['Column_system.column.outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax2.plot(sim_res['time'], sim_res['column.outlet.c[2]'], label='P', color='b', linestyle=linetype)"
+            "ax2.plot(t, sim_res['Column_system.column.outlet.c[2]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax3.plot(sim_res['time'], sim_res['column.outlet.c[3]'], label='A', color='r', linestyle=linetype)"
+            "ax3.plot(t, sim_res['Column_system.column.outlet.c[3]'], label='A', color='r', linestyle=linetype)"
         )
 
     else:
@@ -1063,7 +1064,7 @@ FMU_explore_info()
 #------------------------------------------------------------------------------------------------------------------
 
 del parValue, parLocation, parCheck
-del model, fmu_model, fmu_process_diagram
+del fmu_model, fmu_process_diagram
 del MSL_usage, MSL_version, BPL_version
 del opts_std, simulationTime, timeDiscreteStates
 del flag_type, flag_vendor
