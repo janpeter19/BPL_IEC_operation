@@ -681,7 +681,6 @@ def newplot(title="IEC", plotType="Loading"):
     elif plotType == "Elution-conductivity-vs-CV-combined-all":
 
         # Part of plot made before simulation
-        plt.figure()
         ax1 = plt.subplot(2, 1, 1)
         ax2 = plt.subplot(10, 1, 6)
         ax3 = plt.subplot(10, 1, 7)
