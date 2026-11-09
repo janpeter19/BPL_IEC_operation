@@ -720,26 +720,26 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax[0].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax[0].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].legend()")
         diagrams.append(
-            "ax[1].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax[2].step(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+            "ax[3].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+            "ax[4].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[5].plot(sim_res['ackF']/model.get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+            "ax[5].plot(sim_res['Column_system.ackF']/model_get('column.V')[0], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-conductivity-combined-all":
@@ -752,6 +752,14 @@ def newplot(title="IEC", plotType="Loading"):
         ax4 = plt.subplot(10, 1, 8)
         ax5 = plt.subplot(10, 1, 9)
         ax6 = plt.subplot(10, 1, 10)
+        
+        ax.clear()
+        ax.append(ax1)
+        ax.append(ax2)
+        ax.append(ax3)
+        ax.append(ax4)
+        ax.append(ax5)
+        ax.append(ax6)
 
         # ax[0].set_title(title)
         ax[0].grid()
@@ -810,9 +818,13 @@ def newplot(title="IEC", plotType="Loading"):
 
         # Part of plot made before simulation
         plt.figure()
-        ax[0] = plt.subplot(3, 1, 1)
-        ax[1] = plt.subplot(3, 1, 2)
-        ax[2] = plt.subplot(6, 1, 5)
+        ax1 = plt.subplot(3, 1, 1)
+        ax2 = plt.subplot(3, 1, 2)
+        ax3 = plt.subplot(6, 1, 5)
+        
+        ax.clear()
+        ax.append(ax1)
+        ax.append(ax2)
 
         ax[0].set_title(title)
         ax[0].grid()
