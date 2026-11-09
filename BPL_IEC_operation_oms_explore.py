@@ -236,11 +236,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
@@ -248,11 +248,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax2.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
@@ -277,11 +277,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot((sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
+            "ax1.plot((sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
                                 sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot((sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
+            "ax1.plot((sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
                                 sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
@@ -289,11 +289,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot((sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
+            "ax2.plot((sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax2.plot((sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
+            "ax2.plot((sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'))/model.get('column.V'), \
                                 0.05*sim_res['column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
@@ -318,11 +318,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], \
+            "ax1.plot(sim_res['Column_system.ackF'], \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], \
+            "ax1.plot(sim_res['Column_system.ackF'], \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
@@ -330,11 +330,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'], \
+            "ax2.plot(sim_res['Column_system.ackF'], \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax2.plot(sim_res['ackF'], \
+            "ax2.plot(sim_res['Column_system.ackF'], \
                                 0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
@@ -363,11 +363,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
@@ -375,15 +375,15 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
         diagrams.append("ax2.set_ylim([0,0.45])")
 
         diagrams.append(
-            "ax3.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax3.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+                                sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append("ax3.set_xlim(left=0)")
 
@@ -409,25 +409,25 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], \
+            "ax1.plot(sim_res['Column_system.ackF'], \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'], \
+            "ax1.plot(sim_res['Column_system.ackF'], \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(left=0)")
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'], \
+            "ax2.plot(sim_res['Column_system.ackF'], \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append("ax2.set_xlim(left=0)")
 
         diagrams.append(
-            "ax3.plot(sim_res['ackF'], \
-                                sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax3.plot(sim_res['Column_system.ackF'], \
+                                sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append("ax3.set_xlim(left=0)")
 
@@ -519,33 +519,33 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                            0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='E', color='m', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax3.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax3.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax4.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax4.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax5.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax5.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
@@ -583,11 +583,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax1.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax1.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax1.legend()")
@@ -596,23 +596,23 @@ def newplot(title="IEC", plotType="Loading"):
         )
 
         diagrams.append(
-            "ax2.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
-                                sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax2.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
+                                sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax3.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax3.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax4.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax4.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax5.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax5.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax6.plot(sim_res['ackF'] - parValue['start_desorption']*model.get('F')/model.get('control_buffer2.scaling'), \
+            "ax6.plot(sim_res['Column_system.ackF'] - parValue['start_desorption']*model_get('F')/model_get('control_buffer2.scaling'), \
                                 sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
         diagrams.append("ax1.set_xlim(0)")
@@ -656,26 +656,26 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['ackF'], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
+            "ax[0].plot(sim_res['Column_system.ackF'], sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['ackF'], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
+            "ax[0].plot(sim_res['Column_system.ackF'], sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].legend()")
         diagrams.append(
-            "ax[1].plot(sim_res['ackF'], sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax[1].plot(sim_res['Column_system.ackF'], sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(sim_res['ackF'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
+            "ax[2].step(sim_res['Column_system.ackF'], sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(sim_res['ackF'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
+            "ax[3].plot(sim_res['Column_system.ackF'], sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].plot(sim_res['ackF'], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
+            "ax[4].plot(sim_res['Column_system.ackF'], sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[5].plot(sim_res['ackF'], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
+            "ax[5].plot(sim_res['Column_system.ackF'], sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
     elif plotType == "Elution-conductivity-vs-CV-combined-all":
@@ -726,7 +726,7 @@ def newplot(title="IEC", plotType="Loading"):
         )
         diagrams.append("ax[0].legend()")
         diagrams.append(
-            "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
             "ax[2].step(sim_res['Column_system.ackF']/model_get('column.V'), sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
@@ -783,33 +783,33 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[0].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[0].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].legend()")
 
         diagrams.append(
-            "ax[1].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
-                       sim_res['conductivity_detector.value'], color='m', linestyle=linetype)"
+            "ax[1].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
+                       sim_res['Column_system.conductivity_detector.value'], color='m', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[2].step(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[2].step(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['tank_sample.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[3].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[3].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['tank_buffer1.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[4].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[4].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['tank_buffer2.Fsp'], color='g', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[5].plot(t-parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[5].plot(t-parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                        sim_res['tank_harvest.V'], color='g', linestyle=linetype)"
         )
 
@@ -839,11 +839,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[0].plot(t - parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[0].plot(t - parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].set_xlim(left=0)")
@@ -851,11 +851,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax[0].legend()")
 
         diagrams.append(
-            "ax[1].plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[1].plot(t - parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[1].plot(t - parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                            0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax[1].set_xlim(left=0)")
@@ -863,7 +863,7 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax[1].legend()")
 
         diagrams.append(
-            "ax[2].step(t - parValue['start_desorption']/model.get('control_buffer2.scaling'), \
+            "ax[2].step(t - parValue['start_desorption']/model_get('control_buffer2.scaling'), \
                                 sim_res['control_pooling.out'], color='k', linestyle=linetype)"
         )
         diagrams.append("ax[2].set_xlim(left=0)")
@@ -890,11 +890,11 @@ def newplot(title="IEC", plotType="Loading"):
         # Part of plot made after simulation
         diagrams.clear()
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V'), \
+            "ax[0].plot(sim_res['Column_system.ackF']/model_get('column.V'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[1]'], label='P', color='b', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[0].plot(sim_res['ackF']/model.get('column.V'), \
+            "ax[0].plot(sim_res['Column_system.ackF']/model_get('column.V'), \
                                 sim_res['Column_system.column.column_section[8].outlet.c[2]'], label='A', color='r', linestyle=linetype)"
         )
         diagrams.append("ax[0].set_xlim(left=0)")
@@ -902,11 +902,11 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax[0].legend()")
 
         diagrams.append(
-            "ax[1].plot(sim_res['ackF']/model.get('column.V'), \
+            "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V'), \
                                 sim_res['uv_detector.value'], label='UV', color='k', linestyle=linetype)"
         )
         diagrams.append(
-            "ax[1].plot(sim_res['ackF']/model.get('column.V'), \
+            "ax[1].plot(sim_res['Column_system.ackF']/model_get('column.V'), \
                            0.05*sim_res['Column_system.column.column_section[8].outlet.c[3]'], label='salt', color='m', linestyle=linetype)"
         )
         diagrams.append("ax[1].set_xlim(left=0)")
@@ -914,7 +914,7 @@ def newplot(title="IEC", plotType="Loading"):
         diagrams.append("ax[1].legend()")
 
         diagrams.append(
-            "ax[2].step(sim_res['ackF']/model.get('column.V'), \
+            "ax[2].step(sim_res['Column_system.ackF']/model_get('column.V'), \
                                 sim_res['control_pooling.out'], color='k', linestyle=linetype)"
         )
         diagrams.append("ax[2].set_xlim(left=0)")
@@ -1004,21 +1004,21 @@ def describe(name, decimals=3):
         )
 
     elif name in ["liquidphase", "media"]:
-        P = model.get("liquidphase.P")
-        P_description = model.get_variable_description("liquidphase.P")
-        P_mw = model.get("liquidphase.mw[1]")
-        A = model.get("liquidphase.A")
-        A_description = model.get_variable_description("liquidphase.A")
-        A_mw = model.get("liquidphase.mw[2]")
-        E = model.get("liquidphase.E")
-        E_description = model.get_variable_description("liquidphase.E")
-        E_mw = model.get("liquidphase.mw[3]")
-        PS = model.get("liquidphase.PS")
-        PS_description = model.get_variable_description("liquidphase.PS")
-        PS_mw = model.get("liquidphase.mw[4]")
-        AS = model.get("liquidphase.AS")
-        AS_description = model.get_variable_description("liquidphase.AS")
-        AS_mw = model.get("liquidphase.mw[5]")
+        P = model_get("liquidphase.P")
+        P_description = model_get_variable_description("liquidphase.P")
+        P_mw = model_get("liquidphase.mw[1]")
+        A = model_get("liquidphase.A")
+        A_description = model_get_variable_description("liquidphase.A")
+        A_mw = model_get("liquidphase.mw[2]")
+        E = model_get("liquidphase.E")
+        E_description = model_get_variable_description("liquidphase.E")
+        E_mw = model_get("liquidphase.mw[3]")
+        PS = model_get("liquidphase.PS")
+        PS_description = model_get_variable_description("liquidphase.PS")
+        PS_mw = model_get("liquidphase.mw[4]")
+        AS = model_get("liquidphase.AS")
+        AS_description = model_get_variable_description("liquidphase.AS")
+        AS_mw = model_get("liquidphase.mw[5]")
 
         print(
             "Chromatography liquidphase (or mobilephase) substances included in the model"
