@@ -6,6 +6,7 @@
 # 2026-09-28 - Decrease the framework to what is necessary and move matlotlib and numpy to the other setup-file
 # 2026-09-28 - Change indentaiton from 3 spaces to 4 
 # 2026-11-09 - Modified for oms
+# 2026-11-19 - Corrected options including now self.simulationTime instead of just simulationTime
 #------------------------------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ else:
 simulationTime = 100.0
 
 # Options
-options = ['self.model.setLoggingInterval(simulationTime/550)']
+options = ['self.model.setLoggingInterval(self.simulationTime/550)']
 
 # Dictionary of time discrete states
 timeDiscreteStates = {} 
